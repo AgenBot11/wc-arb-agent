@@ -1,0 +1,7 @@
+{
+  "wc-arb-agent": {
+    "command": "python",
+    "args": ["mcp_server.py"],
+    "env": {}
+  }
+}

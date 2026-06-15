@@ -67,6 +67,13 @@ def _is_configured(value: str) -> bool:
     return "YOUR_" not in upper and "PLACEHOLDER" not in upper
 
 
+def ensure_user_config() -> Path:
+    """Create config.yaml from example if missing — zero manual file setup."""
+    if not USER_CONFIG.exists() and DEFAULT_CONFIG.exists():
+        USER_CONFIG.write_text(DEFAULT_CONFIG.read_text(encoding="utf-8"), encoding="utf-8")
+    return USER_CONFIG
+
+
 def config_status() -> dict[str, bool]:
     cfg = load_config()
     aff = cfg.get("affiliate", {})

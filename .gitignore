@@ -3,6 +3,7 @@ __pycache__/
 .env
 config.yaml
 .sessions/
+.cache/
 *.log
 .venv/
 venv/
