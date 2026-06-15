@@ -80,13 +80,10 @@ python -m scraper.playwright_odds --platform stake --url "MATCH_URL"
 
 ---
 
-## Automated tests (TODO)
+## Automated tests
 
 ```bash
-pytest tests/   # add unit tests for core/arbitrage.py and core/middle.py
+python -m pytest -q
 ```
 
-Recommended test cases:
-- Surebet detection with known odds triple
-- Middle profit when France wins 2-1
-- Stake sum equals bankroll
+**Pass criteria:** all tests green (arbitrage, middle, config, cache, autopilot, playbooks).

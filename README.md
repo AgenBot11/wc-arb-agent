@@ -5,7 +5,7 @@
 Free, open-source, and built for crypto sportsbooks (Stake, Cloudbet, BC.Game).  
 Scan surebets, detect Asian handicap middles, analyze live commentary, and plan automated bets.
 
-> Sell shovels, not gold. This tool is free — we earn through platform referral programs when you sign up via our links.
+> Free and open source (MIT). Optional referral links in `config.yaml` support ongoing development.
 
 ---
 

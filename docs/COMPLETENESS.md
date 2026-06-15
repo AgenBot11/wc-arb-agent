@@ -27,8 +27,8 @@
 - [ ] Chrome extension UI
 - [ ] BC.Game (optional platform)
 
-## Publish gate for X
+## Before public demo
 
-1. `affiliate` shows `[OK]` — user has Stake + Cloudbet
-2. `autopilot --preview` returns a middle/surebet
-3. Screenshot of scan or autopilot preview in README
+1. `python cli.py affiliate` — at least one `[OK]` platform
+2. `python cli.py autopilot --preview` — returns an opportunity
+3. README includes a scan or preview screenshot
