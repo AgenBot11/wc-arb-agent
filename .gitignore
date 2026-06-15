@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+.env
+config.yaml
+.sessions/
+*.log
+.venv/
+venv/
+dist/
+build/
+*.egg-info/
+.pytest_cache/
+playwright-report/
+test-results/

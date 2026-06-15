@@ -1,0 +1,31 @@
+# Copy to config.yaml and fill in your affiliate referral codes.
+
+affiliate:
+  stake:
+    ref_code: "YOUR_STAKE_CODE"
+    url: "https://stake.com/?c=YOUR_STAKE_CODE"
+    commission: "$50-200 per depositor"
+  cloudbet:
+    ref_code: "YOUR_CLOUDBET_CODE"
+    url: "https://cloudbet.com/en/auth/sign-up?referrer=YOUR_CLOUDBET_CODE"
+    commission: "varies"
+  bcgame:
+    ref_code: "YOUR_BCGAME_CODE"
+    url: "https://bc.game/?i=YOUR_BCGAME_CODE"
+    commission: "varies"
+
+bot:
+  bankroll: 7.0
+  min_surebet_profit_pct: 0.1
+  min_middle_profit: 0.5
+  auto_execute: false   # KEEP FALSE until tested
+  dry_run: true
+
+platforms:
+  - stake
+  - cloudbet
+
+# Optional: API-Football for live commentary
+api_football:
+  key: "YOUR_API_KEY"
+  base_url: "https://v3.football.api-sports.io"
