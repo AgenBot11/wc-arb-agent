@@ -163,12 +163,12 @@ python cli.py setup   # creates config.yaml from example
 - [x] Surebet calculator
 - [x] Middle detector
 - [x] Commentary Agent (rule-based)
-- [x] Playwright scraper scaffold
-- [x] Dry-run bet executor
+- [x] Playwright scraper + parsers
+- [x] Autopilot bet executor (opt-in `--enable`)
 - [x] Agent browser playbooks (Grok / Playwright / browser-use)
 - [x] BYOK API key documentation
-- [ ] Stake / Cloudbet DOM parsers (deep)
-- [ ] API-Football live feed
+- [ ] DOM selector hardening (site updates)
+- [ ] API-Football live feed (optional)
 - [ ] Chrome extension UI
 - [ ] LLM-powered Agent layer
 
