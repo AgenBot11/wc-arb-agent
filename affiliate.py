@@ -53,6 +53,8 @@ def format_affiliate_banner() -> str:
         if link.configured:
             any_configured = True
             lines.append(f"  {link.platform}: {link.url}")
+        elif link.platform == "bcgame" and not link.url:
+            lines.append(f"  {link.platform}: skipped (optional)")
         else:
             lines.append(f"  {link.platform}: run `python cli.py setup` to configure")
     if not any_configured:

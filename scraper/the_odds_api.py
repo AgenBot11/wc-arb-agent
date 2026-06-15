@@ -12,7 +12,6 @@ from scraper.cache import get_cached, get_cached_stale, set_cached
 SPORT_KEYS = [
     "soccer_fifa_world_cup",
     "soccer_fifa_world_cup_qualification_concaf",
-    "soccer_fifa_world_cup_winner",
 ]
 REGIONS = "eu,uk,us,au"
 MARKETS = "h2h,spreads,totals"

@@ -31,7 +31,9 @@ def fetch_live_fixtures(league_id: int = 1) -> tuple[list[LiveFixture], dict]:
     base = cfg.get("api_football", {}).get("base_url", "https://v3.football.api-sports.io")
     if not api_key or "YOUR_" in api_key.upper():
         meta["errors"].append(
-            f"Missing api_football.key — register: {registration_url_for('api_football', 'https://dashboard.api-football.com/register')}"
+            "Missing api_football.key (optional) — register: "
+            f"{registration_url_for('api_football', 'https://dashboard.api-football.com/register')} "
+            "→ login → copy API Key from dashboard (no separate World Cup product)"
         )
         return [], meta
 

@@ -21,7 +21,8 @@ def test_get_missing_registrations():
     missing = get_missing_registrations(status)
     ids = {m.id for m in missing}
     assert "stake_affiliate" in ids
-    assert "api_football" in ids
+    assert "api_football" not in ids  # optional
+    assert "bcgame_affiliate" not in ids  # optional
     assert "cloudbet_affiliate" not in ids
 
 
