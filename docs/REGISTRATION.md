@@ -10,12 +10,16 @@
 
 申请时附上 GitHub 仓库链接：`https://github.com/AgenBot11/wc-arb-agent`
 
-## 必须注册（功能相关）
+## 必须注册（功能相关）— 每人用自己的 Key（BYOK）
+
+> **禁止共用 API Key。** 额度按账号计算，共用几天就耗尽。详见 [API_KEYS.md](./API_KEYS.md)
 
 | # | 平台 | 链接 | 用途 | 费用 |
 |---|------|------|------|------|
-| 4 | **The-Odds-API** | https://the-odds-api.com | `scan --live` 实时赔率 | 免费 500 credits/月 |
-| 5 | **API-Football** | https://www.api-football.com | `fixtures` + 文字事件 | 免费 100 次/天 |
+| 4 | **The-Odds-API** | https://the-odds-api.com/#get-access | `scan --live` 实时赔率 | 免费 ~500 credits/月 **每账号** |
+| 5 | **API-Football**（可选） | https://dashboard.api-football.com/register | `fixtures` + 事件 | 免费 ~100 次/天 **每账号** |
+
+**备选：** 不注册 API 也可用 [BROWSER_AGENT.md](./BROWSER_AGENT.md) 让 Agent 浏览器抓 Stake/Cloudbet 盘口。
 
 ## 必须注册（推广相关）
 

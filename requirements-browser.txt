@@ -1,0 +1,3 @@
+# Optional — Agent browser-use integration (docs/BROWSER_AGENT.md)
+browser-use>=0.1.0
+langchain-openai>=0.2.0

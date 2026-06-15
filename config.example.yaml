@@ -1,4 +1,8 @@
-# Copy to config.yaml and fill in your affiliate referral codes.
+# =============================================================================
+# COPY TO config.yaml — fill in YOUR codes and YOUR API keys only.
+# NEVER commit config.yaml. NEVER use someone else's API key (quota is per user).
+# See docs/API_KEYS.md
+# =============================================================================
 
 affiliate:
   stake:
@@ -25,18 +29,21 @@ platforms:
   - stake
   - cloudbet
 
-# Live odds from The-Odds-API (100 free requests/month)
-# https://the-odds-api.com — enables `python cli.py scan --live`
+# --- YOUR API keys (register yourself) ---
+# The-Odds-API: https://the-odds-api.com/#get-access  (~500 credits/month)
 the_odds_api:
   key: "YOUR_THE_ODDS_API_KEY"
 
-# Live fixtures + events for Agent signals
-# https://www.api-football.com — enables `python cli.py fixtures`
+# API-Football (optional): https://dashboard.api-football.com/register
+# No separate "World Cup API" — copy dashboard API Key, tool filters leagues
 api_football:
   key: "YOUR_API_FOOTBALL_KEY"
   base_url: "https://v3.football.api-sports.io"
 
-# Override affiliate codes via env (optional, never commit):
-#   WC_ARB_STAKE_REF, WC_ARB_STAKE_URL
-#   WC_ARB_CLOUDBET_REF, WC_ARB_BCgame_REF
-#   WC_ARB_API_FOOTBALL_KEY, WC_ARB_THE_ODDS_API_KEY
+# Browser agent (optional) — see docs/BROWSER_AGENT.md
+browser_agent:
+  preferred: "playbook"   # playbook | playwright | browser-use
+  session_dir: ".sessions"
+
+# Env overrides (no file edit): WC_ARB_THE_ODDS_API_KEY, WC_ARB_API_FOOTBALL_KEY,
+# WC_ARB_STAKE_REF, WC_ARB_CLOUDBET_REF, WC_ARB_BCGAME_REF

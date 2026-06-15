@@ -32,12 +32,45 @@ cd wc-arb-agent
 pip install -r requirements.txt
 playwright install chromium
 
-# Scan demo World Cup odds for opportunities
-python cli.py scan --bankroll 7
+python cli.py setup          # your own config.yaml (never commit)
+python cli.py scan --bankroll 7   # demo + live if you added YOUR API key
 
 # Analyze live commentary text
 python cli.py agent --text "Red card shown to Senegal defender"
 ```
+
+**Grok plugin:** `grok plugin install AgenBot11/wc-arb-agent --trust`
+
+---
+
+## API Keys — Bring Your Own (BYOK)
+
+**Each user must register their own API keys.** The project does not ship shared keys.
+
+| Why | Detail |
+|-----|--------|
+| Quota | The-Odds-API ~500 credits/month per account |
+| Security | Shared keys get exhausted in days when used by all users |
+| Setup | Copy `config.example.yaml` → `config.yaml`, paste **your** keys |
+
+Register: [The-Odds-API](https://the-odds-api.com/#get-access) · [API-Football](https://dashboard.api-football.com/register) (optional)
+
+Full policy: [docs/API_KEYS.md](docs/API_KEYS.md)
+
+---
+
+## Agent Browser Takeover (no API quota)
+
+For **Stake / Cloudbet real odds** or when API credits run low, use Agent browser playbooks:
+
+```bash
+python cli.py browser --list
+python cli.py browser --scenario stake_scrape_odds
+python cli.py browser --scenario stake_login --run login --platform stake
+```
+
+Works with Grok browser, Playwright, or optional [browser-use](https://github.com/browser-use/browser-use).  
+Guide: [docs/BROWSER_AGENT.md](docs/BROWSER_AGENT.md)
 
 ---
 
@@ -103,8 +136,8 @@ Replace `YOUR_CODE` with codes from `config.yaml` after copying `config.example.
 ## Configuration
 
 ```bash
-cp config.example.yaml config.yaml
-# Edit affiliate codes and API keys
+python cli.py setup   # creates config.yaml from example
+# Fill in YOUR affiliate codes and YOUR API keys — never commit config.yaml
 ```
 
 **Safety defaults:**
@@ -120,7 +153,9 @@ cp config.example.yaml config.yaml
 - [x] Commentary Agent (rule-based)
 - [x] Playwright scraper scaffold
 - [x] Dry-run bet executor
-- [ ] Stake / Cloudbet DOM parsers
+- [x] Agent browser playbooks (Grok / Playwright / browser-use)
+- [x] BYOK API key documentation
+- [ ] Stake / Cloudbet DOM parsers (deep)
 - [ ] API-Football live feed
 - [ ] Chrome extension UI
 - [ ] LLM-powered Agent layer

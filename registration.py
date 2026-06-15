@@ -54,7 +54,7 @@ REGISTRATIONS: list[RegistrationItem] = [
         "The-Odds-API（实时赔率）",
         "https://the-odds-api.com/#get-access",
         "data",
-        "免费注册 → the_odds_api.key（或环境变量 WC_ARB_THE_ODDS_API_KEY）",
+        "必须用自己的 Key（BYOK）→ the_odds_api.key，禁止共用额度",
         True,
         "5 分钟",
         "the_odds_api",

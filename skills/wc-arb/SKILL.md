@@ -1,58 +1,59 @@
 ---
 name: wc-arb
 description: >
-  World Cup crypto sportsbook arbitrage agent. Auto-scan surebets and Asian handicap
-  middles across Stake, Cloudbet, BC.Game. MCP tools: wc_arb_onboard, wc_arb_scan,
-  wc_arb_registration_links, wc_arb_status. Use for /wc-arb, /wc-arb-scan, sports
-  arbitrage, middle bets, USDT staking, World Cup 2026 betting analysis.
+  World Cup crypto sportsbook arbitrage agent. MCP: wc_arb_scan, wc_arb_onboard,
+  wc_arb_browser_playbook, wc_arb_registration_links. BYOK API keys required.
+  Browser takeover for Stake/Cloudbet without API quota.
 ---
 
 # WC Arb Agent — Grok Operator Mode
 
-You are the lead arbitrage operator. **Minimize user actions.** Run tools yourself — never ask the user to run CLI unless MCP is unavailable.
+**Minimize user actions.** Run MCP tools yourself.
 
-## Zero-touch workflow (always prefer MCP)
+## Critical: BYOK (Bring Your Own Key)
 
-| Step | Tool | When |
-|------|------|------|
-| First time | `wc_arb_onboard` | New user or missing config |
-| Every scan | `wc_arb_scan` | Default bankroll=7, live=true |
-| Missing keys | `wc_arb_registration_links` | Paste URLs directly — do NOT make user search |
-| Status check | `wc_arb_status` | Before telling user what's missing |
-| Live fixtures | `wc_arb_fixtures` | During match days |
-| Commentary | `wc_arb_agent` | User pastes live text |
+- **Never** use or share the maintainer's API keys
+- Each user registers **their own** [The-Odds-API](https://the-odds-api.com/#get-access) key
+- Quota is per account (~500 credits/month) — shared keys die in days
+- Tell users: paste **their** key into `config.yaml` or env `WC_ARB_THE_ODDS_API_KEY`
+- Full policy: `docs/API_KEYS.md`
 
-## Rules for registration links
+If user has no API key: run `wc_arb_scan` with `live=false` (demo) **or** `wc_arb_browser_playbook` for real Stake/Cloudbet odds.
 
-When config is incomplete, **paste direct URLs** from tool output. Never say "go register somewhere" without the link.
+## Zero-touch workflow
+
+| Step | Tool |
+|------|------|
+| First time | `wc_arb_onboard` |
+| Scan | `wc_arb_scan` (live=true only if user has own key) |
+| No API key | `wc_arb_browser_playbook` + execute steps in browser |
+| Missing config | `wc_arb_registration_links` → paste URLs |
+| Fixtures | `wc_arb_fixtures` (optional API-Football) |
+| Commentary | `wc_arb_agent` |
+
+## Browser takeover (no API quota)
+
+| Tool | Use |
+|------|-----|
+| `wc_arb_browser_list` | List scenarios |
+| `wc_arb_browser_playbook` | Steps for Grok/computer-use agent |
+| `wc_arb_browser_scrape` | Playwright scrape if session exists |
+
+Scenarios: `stake_scrape_odds`, `cloudbet_scrape_odds`, `compare_platforms`, `assisted_bet`  
+`assisted_bet` — fill slip only, **never** click Confirm.
+
+## Registration URLs
 
 | What | URL |
 |------|-----|
+| The-Odds-API | https://the-odds-api.com/#get-access |
+| API-Football (optional) | https://dashboard.api-football.com/register |
 | Stake Affiliate | https://stake.com/affiliate |
 | Cloudbet Affiliate | https://www.cloudbet.com/affiliates |
-| BC.Game Affiliate | https://bc.game/affiliate |
-| The-Odds-API | https://the-odds-api.com/#get-access |
-| API-Football | https://dashboard.api-football.com/register |
-
-User only needs to: click link → register → paste key into `config.yaml` (or set env var). You can offer to write the key if they paste it in chat.
-
-Env var shortcuts (no file edit):
-- `WC_ARB_THE_ODDS_API_KEY`
-- `WC_ARB_API_FOOTBALL_KEY`
-- `WC_ARB_STAKE_REF`, `WC_ARB_CLOUDBET_REF`, `WC_ARB_BCGAME_REF`
 
 ## Output rules
 
-- Give exact: platform, market, odds, stake in USDT
-- Prioritize **middles** over surebets
-- Never hardcode affiliate links — use `wc_arb_affiliate` or config.yaml
-- If live API fails, demo data still runs — mention stale cache if shown
-- End with missing registration links only when something is unconfigured
-
-## Fallback (shell)
-
-```bash
-cd $GROK_PLUGIN_ROOT
-python cli.py onboard
-python cli.py scan
-```
+- Exact platform, market, odds, USDT stake
+- Prioritize middles over surebets
+- Remind users BYOK when discussing live scan
+- Use `wc_arb_affiliate` for signup links, never hardcode

@@ -1,6 +1,6 @@
 {
   "name": "wc-arb-agent",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "World Cup 2026 cross-platform sports arbitrage for crypto bookmakers. Scan surebets, detect Asian handicap middles, analyze live commentary, and plan USDT stakes on Stake, Cloudbet, and BC.Game.",
   "author": {
     "name": "WC Arb Agent Contributors",

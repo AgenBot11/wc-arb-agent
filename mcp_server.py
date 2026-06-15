@@ -106,5 +106,23 @@ def wc_arb_onboard(skip_playwright: bool = False) -> str:
     return _with_missing_links(_py(*args))
 
 
+@mcp.tool()
+def wc_arb_browser_playbook(scenario: str = "stake_scrape_odds") -> str:
+    """Return Agent browser takeover steps for odds scraping or assisted betting. No API quota used."""
+    return _py("browser", "--scenario", scenario)
+
+
+@mcp.tool()
+def wc_arb_browser_list() -> str:
+    """List all browser takeover scenarios (Playwright / Grok / browser-use compatible)."""
+    return _py("browser", "--list")
+
+
+@mcp.tool()
+def wc_arb_browser_scrape(platform: str, match_url: str) -> str:
+    """Scrape match odds from Stake or Cloudbet via Playwright (uses saved .sessions/ login if any)."""
+    return _py("browser", "--scenario", f"{platform}_scrape_odds", "--run", "scrape", "--platform", platform, "--url", match_url)
+
+
 if __name__ == "__main__":
     mcp.run()

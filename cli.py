@@ -55,7 +55,9 @@ def cmd_scan(args):
     if live_meta.get("stale"):
         print(f"Live odds: stale cache ({live_meta.get('stale_age_sec', '?')}s old)")
     if live_meta.get("credits_remaining"):
-        print(f"API credits remaining: {live_meta['credits_remaining']}")
+        print(f"API credits remaining: {live_meta['credits_remaining']} (your key — see docs/API_KEYS.md)")
+    if source in ("live", "all") and live_meta.get("source"):
+        print("Note: Live odds use YOUR The-Odds-API key. Never share keys — quota is per account.")
     for err in live_meta.get("errors", []):
         print(f"Note: {err}")
     if meta.get("live_error"):
@@ -194,7 +196,9 @@ def cmd_init(args):
     else:
         print("\nAll required keys configured.")
 
-    print("\nDone. In Grok: /wc-arb-scan or MCP wc_arb_scan")
+    print("\nBYOK: register YOUR own API keys — docs/API_KEYS.md")
+    print("No API? Use: python cli.py browser --list")
+    print("Done. In Grok: /wc-arb-scan or MCP wc_arb_scan")
     print("Quick test: python cli.py scan")
     return 0
 
@@ -228,6 +232,77 @@ def cmd_onboard(args):
     cmd_init(argparse.Namespace(skip_playwright=args.skip_playwright))
     print("\n" + "=" * 40)
     cmd_status(argparse.Namespace())
+    return 0
+
+
+def cmd_browser(args):
+    from agent.browser_playbooks import (
+        format_playbook_json,
+        format_playbook_markdown,
+        get_playbook,
+        list_playbooks,
+    )
+
+    if args.list:
+        print("# Browser playbooks\n")
+        for pb in list_playbooks():
+            print(f"- {pb.id}: {pb.name} ({pb.platform})")
+        print("\nDocs: docs/BROWSER_AGENT.md | API BYOK: docs/API_KEYS.md")
+        return 0
+
+    if not args.scenario:
+        print("Usage: python cli.py browser --list | --scenario stake_scrape_odds")
+        return 1
+
+    pb = get_playbook(args.scenario)
+    if not pb:
+        print(f"Unknown scenario: {args.scenario}. Run: python cli.py browser --list")
+        return 1
+
+    if args.json:
+        print(format_playbook_json(pb))
+    else:
+        print(format_playbook_markdown(pb))
+
+    if args.run == "scrape":
+        import asyncio
+
+        from executor.browser_agent import run_playwright_scrape
+
+        if not args.url:
+            print("Error: --url required for --run scrape")
+            return 1
+        result = asyncio.run(
+            run_playwright_scrape(args.platform or pb.platform, args.url, headless=not args.headful)
+        )
+        print(json.dumps(result, indent=2))
+    elif args.run == "login":
+        import asyncio
+
+        from executor.browser_agent import run_playwright_login
+
+        login_urls = {
+            "stake": "https://stake.com",
+            "cloudbet": "https://cloudbet.com/en/auth/login",
+        }
+        platform = args.platform or pb.platform
+        url = args.url or login_urls.get(platform, "")
+        if not url:
+            print("Error: --url or known platform required")
+            return 1
+        result = asyncio.run(run_playwright_login(platform, url, headless=False))
+        print(json.dumps(result, indent=2))
+    elif args.run == "agent":
+        import asyncio
+
+        from executor.browser_agent import run_browser_use_agent
+
+        if not args.url:
+            print("Error: --url required for --run agent")
+            return 1
+        result = asyncio.run(run_browser_use_agent(args.scenario, args.url))
+        print(json.dumps(result, indent=2, default=str))
+
     return 0
 
 
@@ -268,6 +343,16 @@ def main():
     sub.add_parser("setup", help="Create config + show links").set_defaults(func=cmd_setup)
     sub.add_parser("fixtures", help="Live fixtures").set_defaults(func=cmd_fixtures)
     sub.add_parser("status", help="Config status").set_defaults(func=cmd_status)
+
+    browser_p = sub.add_parser("browser", help="Agent browser playbooks")
+    browser_p.add_argument("--list", action="store_true", help="List scenarios")
+    browser_p.add_argument("--scenario", type=str, default="", help="Playbook id")
+    browser_p.add_argument("--json", action="store_true", help="JSON output")
+    browser_p.add_argument("--run", choices=["scrape", "login", "agent"], default="")
+    browser_p.add_argument("--platform", type=str, default="")
+    browser_p.add_argument("--url", type=str, default="")
+    browser_p.add_argument("--headful", action="store_true", help="Show browser window")
+    browser_p.set_defaults(func=cmd_browser)
 
     args = parser.parse_args()
     sys.exit(args.func(args))
