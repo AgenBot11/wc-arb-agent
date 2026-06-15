@@ -2,14 +2,21 @@
 
 from core.arbitrage import OutcomeOdds, find_surebets
 from core.middle import MiddleLeg, find_middle_opportunities
-from scraper.demo_data import get_demo_world_cup_odds
+from scraper.aggregate import get_all_snapshots
+from scraper.base import OddsSnapshot
 
 
-def scan_surebets(bankroll: float = 7.0, min_profit_pct: float = 0.0) -> list:
-    opportunities = []
-    for snapshot in get_demo_world_cup_odds():
+def _scan_snapshots(
+    snapshots: list[OddsSnapshot],
+    bankroll: float,
+    min_profit_pct: float,
+) -> tuple[list, list]:
+    surebets = []
+    middles = []
+
+    for snapshot in snapshots:
         for market in ("1x2",):
-            selections = {}
+            selections: dict[str, OutcomeOdds] = {}
             for platform in snapshot.platforms:
                 for m in platform.markets:
                     if m.market == market:
@@ -29,13 +36,8 @@ def scan_surebets(bankroll: float = 7.0, min_profit_pct: float = 0.0) -> list:
                     min_profit_pct=min_profit_pct,
                 )
                 if opp:
-                    opportunities.append(opp)
-    return opportunities
+                    surebets.append(opp)
 
-
-def scan_middles(bankroll: float = 7.0) -> list:
-    opportunities = []
-    for snapshot in get_demo_world_cup_odds():
         favorites = []
         underdogs = []
         for platform in snapshot.platforms:
@@ -50,7 +52,35 @@ def scan_middles(bankroll: float = 7.0) -> list:
                             MiddleLeg(platform.platform, m.selection, m.handicap, m.odds)
                         )
         if favorites and underdogs:
-            opportunities.extend(
+            middles.extend(
                 find_middle_opportunities(snapshot.match, favorites, underdogs, bankroll)
             )
-    return opportunities
+
+    return surebets, middles
+
+
+def scan_surebets(
+    bankroll: float = 7.0,
+    min_profit_pct: float = 0.0,
+    source: str = "demo",
+) -> list:
+    snapshots, _ = get_all_snapshots(source)
+    surebets, _ = _scan_snapshots(snapshots, bankroll, min_profit_pct)
+    return surebets
+
+
+def scan_middles(bankroll: float = 7.0, source: str = "demo") -> list:
+    snapshots, _ = get_all_snapshots(source)
+    _, middles = _scan_snapshots(snapshots, bankroll, 0.0)
+    return middles
+
+
+def scan_all(
+    bankroll: float = 7.0,
+    min_profit_pct: float = 0.0,
+    source: str = "demo",
+) -> tuple[list, list, dict]:
+    snapshots, meta = get_all_snapshots(source)
+    surebets, middles = _scan_snapshots(snapshots, bankroll, min_profit_pct)
+    meta["snapshot_count"] = len(snapshots)
+    return surebets, middles, meta

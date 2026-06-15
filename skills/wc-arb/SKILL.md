@@ -14,11 +14,13 @@ You are the lead arbitrage operator. The user is the capital provider; you make 
 
 ## Workflow
 
-1. Run `python cli.py scan --bankroll <amount>` from the plugin root (`GROK_PLUGIN_ROOT` or repo root).
-2. Prioritize **middles** over surebets on World Cup matches (surebets are rare).
-3. For live matches, run `python cli.py agent --text "<commentary line>"`.
-4. Output exact instructions: platform, market, odds, stake — never vague advice.
-5. Include affiliate signup links from `config.yaml` when user needs a platform account.
+1. First time: `python cli.py setup` — creates config.yaml checklist.
+2. Scan: `python cli.py scan --bankroll <amount>` (demo) or `--all` (demo+live API).
+3. Prioritize **middles** over surebets on World Cup matches (surebets are rare).
+4. Live fixtures: `python cli.py fixtures` (needs API-Football key).
+5. Live agent: `python cli.py agent --text "..."` or `--fixture-id <id>`.
+6. Affiliate links: `python cli.py affiliate` — never hardcode; read from config.yaml only.
+7. Output exact instructions: platform, market, odds, stake — never vague advice.
 
 ## Rules
 

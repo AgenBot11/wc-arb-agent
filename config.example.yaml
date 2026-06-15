@@ -25,7 +25,18 @@ platforms:
   - stake
   - cloudbet
 
-# Optional: API-Football for live commentary
+# Live odds from The-Odds-API (100 free requests/month)
+# https://the-odds-api.com — enables `python cli.py scan --live`
+the_odds_api:
+  key: "YOUR_THE_ODDS_API_KEY"
+
+# Live fixtures + events for Agent signals
+# https://www.api-football.com — enables `python cli.py fixtures`
 api_football:
-  key: "YOUR_API_KEY"
+  key: "YOUR_API_FOOTBALL_KEY"
   base_url: "https://v3.football.api-sports.io"
+
+# Override affiliate codes via env (optional, never commit):
+#   WC_ARB_STAKE_REF, WC_ARB_STAKE_URL
+#   WC_ARB_CLOUDBET_REF, WC_ARB_BCgame_REF
+#   WC_ARB_API_FOOTBALL_KEY, WC_ARB_THE_ODDS_API_KEY
