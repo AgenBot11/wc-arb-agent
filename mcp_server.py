@@ -124,5 +124,54 @@ def wc_arb_browser_scrape(platform: str, match_url: str) -> str:
     return _py("browser", "--scenario", f"{platform}_scrape_odds", "--run", "scrape", "--platform", platform, "--url", match_url)
 
 
+@mcp.tool()
+def wc_arb_login(platform: str) -> str:
+    """Open browser for user to log in to stake or cloudbet once; saves session for autopilot."""
+    return _py("login", "--platform", platform)
+
+
+@mcp.tool()
+def wc_arb_autopilot_enable(dry_run: bool = False) -> str:
+    """One-time opt-in: enable auto_execute in config.yaml for real bets."""
+    args = ["autopilot", "--enable"]
+    if dry_run:
+        args.append("--dry-run")
+    return _py(*args)
+
+
+@mcp.tool()
+def wc_arb_autopilot_check() -> str:
+    """Check if login sessions and auto_execute are ready for autonomous betting."""
+    return _py("autopilot", "--check")
+
+
+@mcp.tool()
+def wc_arb_autopilot(bankroll: float = 7.0, preview: bool = False) -> str:
+    """Autonomous scan + place bets on Stake/Cloudbet. Requires login + autopilot --enable first."""
+    if preview:
+        return _py("autopilot", "--preview", "--bankroll", str(bankroll))
+    return _py("autopilot", "--bankroll", str(bankroll))
+
+
+@mcp.tool()
+def wc_arb_go() -> str:
+    """Full user journey: onboard → check readiness → guide login/enable → run autopilot if ready."""
+    parts = [
+        _py("onboard"),
+        "\n--- READINESS ---\n",
+        _py("autopilot", "--check"),
+        "\n--- INSTRUCTIONS ---\n",
+        "If missing_sessions: call wc_arb_login for each platform.\n"
+        "If need_enable: call wc_arb_autopilot_enable.\n"
+        "When ready: call wc_arb_autopilot.\n"
+        "Docs: docs/AUTOPILOT.md",
+    ]
+    check = _py("autopilot", "--check")
+    if '"ready": true' in check.replace(" ", ""):
+        parts.append("\n--- AUTO RUN ---\n")
+        parts.append(_py("autopilot", "--preview"))
+    return "\n".join(parts)
+
+
 if __name__ == "__main__":
     mcp.run()

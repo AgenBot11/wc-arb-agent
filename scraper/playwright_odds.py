@@ -47,18 +47,19 @@ async def scrape_platform(platform: str, match_url: str, headless: bool = True) 
         page = await context.new_page()
         await page.goto(match_url, wait_until="domcontentloaded", timeout=60000)
 
-        # Platform-specific selectors — customize per site DOM
-        # Returns raw page text for Agent parsing when selectors break
         title = await page.title()
         body_text = await page.inner_text("body")
+        from scraper.parsers.base import parse_page_odds
+
+        markets = parse_page_odds(platform, body_text)
 
         await browser.close()
         return {
             "platform": platform,
             "title": title,
             "url": match_url,
-            "raw_length": len(body_text),
-            "note": "Implement platform-specific parsers in scraper/parsers/",
+            "markets": [{"market": m.market, "selection": m.selection, "odds": m.odds, "handicap": m.handicap} for m in markets],
+            "market_count": len(markets),
         }
 
 

@@ -197,9 +197,11 @@ def cmd_init(args):
         print("\nAll required keys configured.")
 
     print("\nBYOK: register YOUR own API keys — docs/API_KEYS.md")
-    print("No API? Use: python cli.py browser --list")
-    print("Done. In Grok: /wc-arb-scan or MCP wc_arb_scan")
-    print("Quick test: python cli.py scan")
+    print("Autonomous betting: docs/AUTOPILOT.md")
+    print("  1) python cli.py login --platform stake")
+    print("  2) python cli.py login --platform cloudbet")
+    print("  3) python cli.py autopilot --enable && python cli.py autopilot")
+    print("Done. In Grok: wc_arb_go (full autonomous flow)")
     return 0
 
 
@@ -306,6 +308,76 @@ def cmd_browser(args):
     return 0
 
 
+def cmd_login(args):
+    import asyncio
+
+    from executor.browser_agent import run_playwright_login
+    from executor.session import LOGIN_URLS
+
+    platform = args.platform
+    url = args.url or LOGIN_URLS.get(platform, "")
+    if not url:
+        print(f"Unknown platform: {platform}. Use stake or cloudbet")
+        return 1
+
+    print(f"Opening {platform} — log in manually in the browser window (120s)...")
+    result = asyncio.run(run_playwright_login(platform, url, headless=False))
+    print(json.dumps(result, indent=2))
+    print(f"\nNext: python cli.py login --platform cloudbet  (if not done)")
+    print("Then:  python cli.py autopilot --enable && python cli.py autopilot")
+    return 0
+
+
+def cmd_autopilot(args):
+    import asyncio
+
+    from executor.autopilot import (
+        enable_auto_execute,
+        pick_best_opportunity,
+        readiness_check,
+        run_autopilot,
+    )
+
+    if args.enable:
+        out = enable_auto_execute(dry_run=args.dry_run)
+        print(json.dumps(out, indent=2))
+        print("\nAuto-bet ENABLED. Run: python cli.py autopilot")
+        return 0
+
+    if args.check:
+        print(json.dumps(readiness_check(), indent=2, default=str))
+        return 0
+
+    if args.preview:
+        pick = pick_best_opportunity(bankroll=args.bankroll, source=args.source)
+        opp = pick.get("opportunity")
+        print(json.dumps({
+            "type": pick["type"],
+            "match": getattr(opp, "match", None),
+            "orders": [
+                {
+                    "platform": o.platform,
+                    "selection": o.selection,
+                    "stake": o.stake,
+                    "odds": o.odds,
+                }
+                for o in pick.get("orders", [])
+            ],
+        }, indent=2, default=str))
+        return 0
+
+    result = asyncio.run(
+        run_autopilot(
+            bankroll=args.bankroll,
+            source=args.source,
+            force=args.force,
+            headless=not args.headful,
+        )
+    )
+    print(json.dumps(result, indent=2, default=str))
+    return 0 if result.get("status") in ("placed", "dry_run") else 1
+
+
 def main():
     ensure_user_config()
 
@@ -353,6 +425,22 @@ def main():
     browser_p.add_argument("--url", type=str, default="")
     browser_p.add_argument("--headful", action="store_true", help="Show browser window")
     browser_p.set_defaults(func=cmd_browser)
+
+    login_p = sub.add_parser("login", help="Save platform login session (once per platform)")
+    login_p.add_argument("--platform", required=True, choices=["stake", "cloudbet"])
+    login_p.add_argument("--url", type=str, default="")
+    login_p.set_defaults(func=cmd_login)
+
+    ap_p = sub.add_parser("autopilot", help="Autonomous scan + bet")
+    ap_p.add_argument("--enable", action="store_true", help="One-time opt-in for real bets")
+    ap_p.add_argument("--check", action="store_true", help="Readiness check")
+    ap_p.add_argument("--preview", action="store_true", help="Show pick without betting")
+    ap_p.add_argument("--bankroll", type=float, default=7.0)
+    ap_p.add_argument("--source", choices=["demo", "live", "all"], default="all")
+    ap_p.add_argument("--dry-run", action="store_true", dest="dry_run", help="With --enable: keep dry_run")
+    ap_p.add_argument("--force", action="store_true", help="Execute even if auto_execute false")
+    ap_p.add_argument("--headful", action="store_true", help="Show browser during bet")
+    ap_p.set_defaults(func=cmd_autopilot)
 
     args = parser.parse_args()
     sys.exit(args.func(args))

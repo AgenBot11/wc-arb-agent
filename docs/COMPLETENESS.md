@@ -1,36 +1,34 @@
-# Completeness Roadmap — v0.2.0
+# Completeness Roadmap — v0.6.0
 
-## Done (ready to promote)
+## Done (autonomous betting MVP)
 
-- [x] Surebet + middle math engine
-- [x] Demo World Cup odds scanner
-- [x] The-Odds-API live odds integration (`scan --live`, `scan --all`)
-- [x] API-Football fixtures + events (`fixtures`, `agent --fixture-id`)
-- [x] Affiliate manager (config.yaml, env vars — no encryption)
-- [x] CLI: setup, status, affiliate, scan, agent, fixtures
-- [x] Grok Build plugin (skill + /wc-arb command)
-- [x] Unit tests (7 passing)
-- [x] Registration checklist doc
+- [x] Surebet + middle math
+- [x] Demo + The-Odds-API live scan
+- [x] Stake / Cloudbet Playwright bet executors
+- [x] Autopilot: scan → pick → place (`autopilot --enable`)
+- [x] Login session save (`login --platform`)
+- [x] Grok MCP: `wc_arb_go`, `wc_arb_autopilot`, `wc_arb_login`
+- [x] BYOK docs + browser playbooks
+- [x] 19 unit tests
 
-## In progress (before X launch)
+## User journey (target)
 
-- [ ] Your real affiliate codes in config.yaml
-- [ ] The-Odds-API free key (enables live scan)
-- [ ] API-Football free key (enables live fixtures)
-- [ ] 1 screenshot/GIF of `python cli.py scan` for README
+1. `grok plugin install AgenBot11/wc-arb-agent --trust`
+2. `wc_arb_onboard`
+3. `wc_arb_login` × 2 (Stake, Cloudbet)
+4. `wc_arb_autopilot_enable`
+5. `wc_arb_autopilot` — done
 
-## v0.3.0 (next sprint)
+## Remaining (polish)
 
-- [ ] Playwright Stake DOM parser (real crypto book odds)
-- [ ] Playwright Cloudbet DOM parser
-- [ ] BC.Game parser
-- [ ] Auto-bet executor (opt-in, dry-run default)
-- [ ] Chrome extension popup UI
+- [ ] README demo GIF
+- [ ] DOM selector hardening per site A/B tests
+- [ ] `scan --watch` loop
+- [ ] Chrome extension UI
+- [ ] BC.Game (optional platform)
 
-## Publish gate
+## Publish gate for X
 
-**Do NOT post on X until:**
-
-1. `python cli.py affiliate` shows at least 1 `[OK]` platform
-2. `python cli.py scan --all` returns live snapshots OR clear demo + live fallback message
-3. README has install GIF/screenshot
+1. `affiliate` shows `[OK]` — user has Stake + Cloudbet
+2. `autopilot --preview` returns a middle/surebet
+3. Screenshot of scan or autopilot preview in README

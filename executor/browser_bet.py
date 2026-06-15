@@ -1,12 +1,12 @@
 """
-Semi-auto / auto bet executor via Playwright.
+Auto bet executor via Playwright.
 
-SAFETY: auto_execute defaults to False. Enable only after manual testing.
+Enable with: python cli.py autopilot --enable
 """
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 
 
 @dataclass
@@ -29,20 +29,20 @@ class BetExecutor:
             return {
                 "status": "dry_run",
                 "order": order,
-                "message": "Bet logged but not placed. Set auto_execute=True to enable.",
+                "message": "Logged only. Enable: python cli.py autopilot --enable",
             }
 
-        # Platform-specific bet slip automation goes here
-        return {
-            "status": "not_implemented",
-            "order": order,
-            "message": "Add platform bet-slip selectors in executor/parsers/",
-        }
+        from executor.playwright_runner import place_order_via_playwright
+
+        return await place_order_via_playwright(order, headless=True)
 
     async def place_arbitrage_pair(self, orders: list[BetOrder]) -> list[dict]:
-        # Place harder side first (industry standard)
         sorted_orders = sorted(orders, key=lambda o: o.odds)
         results = []
         for order in sorted_orders:
             results.append(await self.place_order(order))
         return results
+
+
+def order_to_dict(order: BetOrder) -> dict:
+    return asdict(order)

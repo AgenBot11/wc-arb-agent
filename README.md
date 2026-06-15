@@ -41,6 +41,18 @@ python cli.py agent --text "Red card shown to Senegal defender"
 
 **Grok plugin:** `grok plugin install AgenBot11/wc-arb-agent --trust`
 
+### Autonomous betting (3 steps after install)
+
+```bash
+python cli.py login --platform stake      # log in once in browser
+python cli.py login --platform cloudbet
+python cli.py autopilot --enable          # one-time opt-in
+python cli.py autopilot                   # scan + place bets
+```
+
+In Grok: `wc_arb_go` → `wc_arb_autopilot`  
+Guide: [docs/AUTOPILOT.md](docs/AUTOPILOT.md)
+
 ---
 
 ## API Keys — Bring Your Own (BYOK)
