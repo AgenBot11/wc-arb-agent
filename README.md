@@ -27,7 +27,7 @@ Most arbitrage bots on GitHub only support US sportsbooks (FanDuel, DraftKings).
 ## Quick Start
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/wc-arb-agent.git
+git clone https://github.com/AgenBot11/wc-arb-agent.git
 cd wc-arb-agent
 pip install -r requirements.txt
 playwright install chromium

@@ -24,7 +24,7 @@ grok plugin enable wc-arb-agent
 Or from GitHub after push:
 
 ```bash
-grok plugin install YOUR_USERNAME/wc-arb-agent --trust
+grok plugin install AgenBot11/wc-arb-agent --trust
 ```
 
 ## Publish to official xAI Marketplace
@@ -42,14 +42,14 @@ grok plugin install YOUR_USERNAME/wc-arb-agent --trust
   "domains": ["stake.com", "cloudbet.com", "bc.game"],
   "source": {
     "source": "url",
-    "url": "https://github.com/YOUR_USERNAME/wc-arb-agent.git",
+    "url": "https://github.com/AgenBot11/wc-arb-agent.git",
     "sha": "PASTE_40_CHAR_COMMIT_SHA"
   },
-  "homepage": "https://github.com/YOUR_USERNAME/wc-arb-agent"
+  "homepage": "https://github.com/AgenBot11/wc-arb-agent"
 }
 ```
 
-4. Pin SHA: `git ls-remote https://github.com/YOUR_USERNAME/wc-arb-agent.git HEAD`
+4. Pin SHA: `git ls-remote https://github.com/AgenBot11/wc-arb-agent.git HEAD`
 5. Wait for xAI review + code-owner approval
 
 **Note:** Gambling plugins may face extra scrutiny. Keep disclaimer prominent.
@@ -62,7 +62,7 @@ Better hook than "random GitHub repo":
 We built a Grok Build plugin for World Cup arbitrage 🏆
 
 Install in one line:
-grok plugin install YOUR_USER/wc-arb-agent --trust
+grok plugin install AgenBot11/wc-arb-agent --trust
 
 Then just type: /wc-arb
 
